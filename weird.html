@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Cozy Lab • Interactive Projects</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Social preview -->
+  <meta name="description" content="A cozy little corner with gentle pastels and playful shapes—explore experiments like Game of Ants, Game of Life, Langton’s Ant Farm, Srigah Otiyot, and Hyper Shapes."/>
+  <meta property="og:title" content="Cozy Lab • Interactive Projects" />
+  <meta property="og:description" content="Explore Ants, Life, an Ant Farm, Hebrew reading practice, and Hyper Shapes—wrapped in a warm, pastel UI." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="." />
+  <meta property="og:image" content="data:image/svg+xml;utf8,
+    %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 300'%3E
+    %3Cdefs%3E%3CradialGradient id='g' cx='30%25' cy='40%25'%3E
+      %3Cstop offset='0' stop-color='%23FFF3C7'/%3E
+      %3Cstop offset='1' stop-color='%23E6E4FA'/%3E
+    %3C/radialGradient%3E%3C/defs%3E
+    %3Crect width='100%25' height='100%25' fill='%23faf6ee'/%3E
+    %3Ccircle cx='180' cy='150' r='120' fill='url(%23g)'/%3E
+    %3C/svg%3E" />
+  <meta name="theme-color" content="#faf6ee" />
+
+  <!-- Tiny inline favicon: pastel circle -->
+  <link rel="icon" href="data:image/svg+xml;utf8,
+    %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E
+      %3Ccircle cx='32' cy='32' r='28' fill='%23DDF4ED'/%3E
+    %3C/svg%3E" />
+
+  <style>
+    /* ========= Root tokens ========= */
+    :root{
+      --bg: #faf6ee;         /* warm linen/ivory */
+      --ink: #2B211A;        /* deep coffee text */
+      --ink-soft:#4a3b31;
+      --muted:#7c6c60;
+
+      /* Pastel palette */
+      --blush:#F9DDE1;
+      --lav:#E6E4FA;
+      --mint:#DDF4ED;
+      --butter:#FFF3C7;
+
+      /* Surfaces & shadows */
+      --card: #fffdf8;
+      --radius: 26px;
+      --shadow-lg: 0 18px 55px rgba(0,0,0,.10), 0 3px 12px rgba(0,0,0,.08);
+      --shadow-sm: 0 8px 22px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.06);
+
+      /* Accents per-button */
+      --accent-ants: var(--blush);
+      --accent-life: var(--lav);
+      --accent-farm: var(--mint);
+      --accent-he:   var(--butter);
+      --accent-hyper: color-mix(in oklab, var(--lav) 50%, var(--mint) 50%);
+
+      /* Motion */
+      --ease: cubic-bezier(.19,.7,.22,1);
+      --dur-in: 220ms;
+      --dur-hover: 160ms;
+
+      /* Focus ring */
+      --ring: 2px solid #2B211A;
+      --ring-offset: 3px;
+    }
+
+    /* Optional explicit light alias (maps to defaults) */
+    html[data-theme="light"] { /* uses :root tokens */ }
+
+    /* Optional dark theme (still pastel & soft) */
+    html[data-theme="dark"]{
+      --bg: #161311;
+      --ink: #F3ECE6;
+      --ink-soft:#e2d9d2;
+      --muted:#cbbfb6;
+      --card: #201B18;
+      --shadow-lg: 0 18px 55px rgba(0,0,0,.45), 0 3px 12px rgba(0,0,0,.35);
+      --shadow-sm: 0 8px 22px rgba(0,0,0,.35), 0 2px 8px rgba(0,0,0,.25);
+
+      /* gently shift pastels in dark */
+      --blush:#52383d;
+      --lav:#3a3857;
+      --mint:#2b423c;
+      --butter:#4c442a;
+
+      --accent-ants:#6b4650;
+      --accent-life:#4b4971;
+      --accent-farm:#3e5b52;
+      --accent-he:#6a5a34;
+      --accent-hyper:#3f5461;
+    }
+
+    /* ========= Base ========= */
+    html,body{height:100%}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Inter","Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+      line-height:1.5;
+      overflow-x:hidden;
+    }
+    h1,h2,h3{
+      font-family: "Merriweather","Georgia","Times New Roman",serif;
+      color: var(--ink);
+      margin:0 0 .4rem 0;
+      letter-spacing:.2px;
+    }
+    p{margin:.5rem 0 1rem 0; color:var(--ink-soft)}
+    .wrap{
+      position:relative;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: clamp(16px, 2.4vw, 28px);
+    }
+
+    /* ========= Background organic blobs ========= */
+    .blobs{
+      position: fixed;
+      inset: -10vmax;
+      pointer-events:none;
+      z-index:0;
+      opacity:.6;
+      filter: blur(22px) saturate(105%);
+    }
+    .blob{
+      position:absolute; width:42vmax; height:42vmax;
+      border-radius: 50%;
+      transform: translate3d(0,0,0);
+      transition: transform 800ms var(--ease);
+      mix-blend-mode: multiply;
+    }
+    .blob--1{ left:-5vmax; top:-2vmax; background: radial-gradient(circle at 30% 30%, var(--butter), transparent 70%), var(--butter); }
+    .blob--2{ right:-8vmax; top:10vmax; background: radial-gradient(circle at 60% 40%, var(--lav), transparent 70%), var(--lav); }
+    .blob--3{ left:20vmax; bottom:-6vmax; background: radial-gradient(circle at 40% 60%, var(--mint), transparent 70%), var(--mint); }
+
+    /* ========= Topbar ========= */
+    header{
+      position:relative;
+      z-index:2;
+    }
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: color-mix(in oklab, var(--card) 85%, transparent);
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(6px);
+    }
+    .brand{ font-weight:700; letter-spacing:.3px; }
+    .brand small{ font-weight:500; color:var(--muted) }
+
+    .toggle{
+      appearance:none; border:0; background: var(--mint);
+      padding:.55rem .9rem; border-radius:999px; font-weight:600; cursor:pointer;
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--dur-hover) var(--ease), box-shadow var(--dur-hover) var(--ease);
+    }
+    .toggle:hover{ transform: translateY(-1px) scale(1.02) }
+    .toggle:focus-visible{ outline: var(--ring); outline-offset: var(--ring-offset); }
+
+    /* ========= Hero ========= */
+    .hero{
+      position:relative; z-index:1;
+      margin: clamp(14px, 3.2vw, 26px) auto;
+      padding: clamp(18px, 3.2vw, 30px);
+      border-radius: var(--radius);
+      background: linear-gradient(160deg, color-mix(in oklab, var(--card) 96%, var(--butter) 4%), color-mix(in oklab, var(--card) 92%, var(--mint) 8%));
+      box-shadow: var(--shadow-lg);
+      animation: heroIn var(--dur-in) var(--ease) both;
+    }
+    .hero h1{ font-size: clamp(1.6rem, 3.6vw, 2.4rem); }
+    .hero p.lead{ font-size: clamp(1rem, 1.3vw, 1.1rem); margin:.6rem 0 0 0; }
+    .hero .sub{ font-size:.95rem; color:var(--muted); margin-top:.35rem; }
+
+    @keyframes heroIn{
+      from{ opacity:0; transform:translateY(8px)}
+      to{ opacity:1; transform:translateY(0)}
+    }
+
+    /* ========= Grid & cards ========= */
+    .grid{
+      margin-top: clamp(14px, 2.6vw, 22px);
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: clamp(14px, 2.4vw, 22px);
+    }
+    @media (min-width: 820px){
+      .grid{ grid-template-columns: repeat(2, 1fr); }
+    }
+
+    article.card{
+      position:relative;
+      padding: clamp(16px, 2.4vw, 24px);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--dur-hover) var(--ease), box-shadow var(--dur-hover) var(--ease);
+      will-change: transform;
+    }
+    article.card:hover{
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+    .btn{
+      display:inline-block;
+      margin-top:.6rem;
+      border:0; text-decoration:none; color: var(--ink);
+      padding:.85rem 1.05rem;
+      border-radius: 999px;
+      font-weight:700;
+      background: var(--mint);
+      box-shadow: var(--shadow-sm);
+      transform: translateZ(0);
+      transition: transform var(--dur-hover) var(--ease), box-shadow var(--dur-hover) var(--ease), filter var(--dur-hover) var(--ease);
+    }
+    .btn:hover{ transform: translateY(-1px) scale(1.02); }
+    .btn:active{ transform: translateY(0) scale(.99); }
+    .btn:focus-visible{ outline: var(--ring); outline-offset: var(--ring-offset); }
+    .btn--ants  { background: var(--accent-ants); }
+    .btn--life  { background: var(--accent-life); }
+    .btn--farm  { background: var(--accent-farm); }
+    .btn--he    { background: var(--accent-he); }
+    .btn--hyper { background: var(--accent-hyper); }
+
+    .desc{ color: var(--ink-soft); margin-top:.25rem; }
+
+    /* ========= Footer ========= */
+    footer{
+      margin: 28px auto 16px;
+      text-align:center;
+      color: var(--muted);
+      font-size:.95rem;
+    }
+
+    /* ========= Back to top ========= */
+    .to-top{
+      position: fixed;
+      right: clamp(12px, 2vw, 16px);
+      bottom: clamp(12px, 2vw, 16px);
+      z-index:3;
+      opacity:0; transform: translateY(8px);
+      pointer-events:none;
+      transition: opacity 160ms var(--ease), transform 160ms var(--ease);
+    }
+    .to-top.show{ opacity:1; transform: translateY(0); pointer-events:auto;}
+    .to-top button{
+      border:0; cursor:pointer; padding:.7rem 1rem; border-radius:999px;
+      background: color-mix(in oklab, var(--lav) 70%, var(--card) 30%);
+      color: var(--ink);
+      box-shadow: var(--shadow-sm);
+      font-weight:700;
+    }
+    .to-top button:focus-visible{ outline: var(--ring); outline-offset: var(--ring-offset); }
+
+    /* ========= Accessibility / reduced motion ========= */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none!important; transition:none!important }
+      .blob{ transition:none!important }
+      html{ scroll-behavior:auto }
+    }
+  </style>
+</head>
+<body>
+  <a href="#projects" class="sr-only" style="
+      position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">
+    Skip to projects
+  </a>
+
+  <!-- Soft drifting background circles -->
+  <div class="blobs" aria-hidden="true">
+    <div class="blob blob--1"></div>
+    <div class="blob blob--2"></div>
+    <div class="blob blob--3"></div>
+  </div>
+
+  <div class="wrap">
+    <header>
+      <nav class="topbar" aria-label="Top">
+        <button id="themeToggle" class="toggle" aria-label="Toggle light or dark theme" title="Toggle theme">
+          Toggle theme
+        </button>
+      </nav>
+
+      <section class="hero" aria-labelledby="hero-title">
+        <h1 id="hero-title">Weird Stuff</h1>
+        <p class="lead">A handful of tiny worlds to poke and explore.</p>
+      </section>
+    </header>
+
+    <main id="projects">
+      <section class="grid" aria-label="Project list">
+        <article class="card">
+          <h3>Game of Ants</h3>
+          <p class="desc">Industrious ants sketch emergent paths across a plane.</p>
+          <a class="btn btn--ants" target="_blank" rel="noopener" aria-label="Open Game of Ants in a new tab"
+             href="https://karshba.github.io/GAME_OF_ANTS/">Open Game of Ants</a>
+        </article>
+
+        <article class="card">
+          <h3>Game of Life</h3>
+          <p class="desc">Conway’s classic zero-player game - simple rules blossom into complex behavior.</p>
+          <a class="btn btn--life" target="_blank" rel="noopener" aria-label="Open Game of Life in a new tab"
+             href="https://karshba.github.io/GAME_OF_LIFE/">Open Game of Life</a>
+        </article>
+
+        <article class="card">
+          <h3>Langton’s Ant Farm</h3>
+          <p class="desc">One ant, two ants, three ants . . . two modes - guided chaos marching across a grid.</p>
+          <a class="btn btn--farm" target="_blank" rel="noopener" aria-label="Open Langton’s Ant Farm in a new tab"
+             href="https://karshba.github.io/LANGTONS_ANT_FARM/">Open Ant Farm</a>
+        </article>
+
+        <article class="card">
+          <h3>Srigah Otiyot</h3>
+          <p class="desc">Explore Obscure Letter Connections.</p>
+          <a class="btn btn--he" target="_blank" rel="noopener" aria-label="Open Srigah Otiyot Hebrew letters drill in a new tab"
+             href="https://srigah-otiyot.onrender.com/srigah_otiyot.html">Open Srigah Otiyot</a>
+          <p class="sub" aria-hidden="true" style="margin:.4rem 0 0; font-size:.9rem;">Hebrew</p>
+        </article>
+
+        <article class="card">
+          <h3>Hyper Shapes</h3>
+          <p class="desc">A gently morphing hyper-object demo—rotate, project, and wander through dimensions.</p>
+          <a class="btn btn--hyper" target="_blank" rel="noopener"
+             aria-label="Open Hyper Shapes playground in a new tab"
+             href="https://hyper-shapes.onrender.com/hyper.html">Open Hyper Shapes</a>
+        </article>
+		<article class="card">
+		  <h3>Kriah Class</h3>
+		  <p class="desc">A gentle structured reading journey - step-by-step fluency practice.</p>
+		  <a class="btn btn--he" target="_blank" rel="noopener"
+			 aria-label="Open Kriah Class in a new tab"
+			 href="https://kriah-class.onrender.com/kriah_class.html">Open Kriah Class</a>
+		  <p class="sub" aria-hidden="true" style="margin:.4rem 0 0; font-size:.9rem;">Hebrew Reading Course</p>
+		</article>
+      </section>
+    </main>
+
+    <footer>
+      Enjoy.
+    </footer>
+  </div>
+
+  <!-- Back to top -->
+  <div class="to-top" id="toTop">
+    <button aria-label="Back to top" onclick="window.scrollTo({top:0, behavior:'smooth'})">Back to top</button>
+  </div>
+
+  <script>
+    (function(){
+      const html = document.documentElement;
+      const toggle = document.getElementById('themeToggle');
+
+      // Robust initialization: always set an explicit theme attribute
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const saved = localStorage.getItem('theme');
+      const initial = saved || (prefersDark ? 'dark' : 'light');
+      html.setAttribute('data-theme', initial);
+
+      // Update button label (optional)
+      const setLabel = () => {
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        toggle.textContent = isDark ? 'Use light theme' : 'Use dark theme';
+      };
+      setLabel();
+
+      toggle.addEventListener('click', () => {
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        const next = isDark ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        setLabel();
+      });
+
+      // Back-to-top visibility
+      const toTop = document.getElementById('toTop');
+      const onScroll = () => {
+        if(window.scrollY > 320){ toTop.classList.add('show'); }
+        else { toTop.classList.remove('show'); }
+      };
+      document.addEventListener('scroll', onScroll, {passive:true});
+      onScroll();
+
+      // Subtle parallax for blobs (disabled when reduced motion)
+      const mqReduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+      const blobs = document.querySelectorAll('.blob');
+      if(!(mqReduce && mqReduce.matches)){
+        window.addEventListener('pointermove', (e)=>{
+          const nx = (e.clientX / window.innerWidth) * 2 - 1;
+          const ny = (e.clientY / window.innerHeight) * 2 - 1;
+          blobs.forEach((b,i)=>{
+            const depth = (i+1);
+            b.style.transform = `translate3d(${nx*depth*6}px, ${ny*depth*6}px, 0)`;
+          });
+        }, {passive:true});
+      }
+    })();
+  </script>
+</body>
+</html>
