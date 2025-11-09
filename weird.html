@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Cozy Lab • Interactive Projects</title>
+  <title>Weird Stuff</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Social preview -->
@@ -54,6 +54,7 @@
       --accent-farm: var(--mint);
       --accent-he:   var(--butter);
       --accent-hyper: color-mix(in oklab, var(--lav) 50%, var(--mint) 50%);
+	  --accent-kriah: #CC8899;
 
       /* Motion */
       --ease: cubic-bezier(.19,.7,.22,1);
@@ -89,6 +90,7 @@
       --accent-farm:#3e5b52;
       --accent-he:#6a5a34;
       --accent-hyper:#3f5461;
+	  --accent-kriah: #A94064;
     }
 
     /* ========= Base ========= */
@@ -142,14 +144,20 @@
       z-index:2;
     }
     .topbar{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:12px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: color-mix(in oklab, var(--card) 85%, transparent);
-      box-shadow: var(--shadow-sm);
-      backdrop-filter: blur(6px);
-    }
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+
+	padding: 10px 14px;
+	border-radius: 999px;
+
+	background: color-mix(in oklab, var(--card) 85%, transparent);
+	box-shadow: var(--shadow-sm);
+	backdrop-filter: blur(6px);
+
+	margin: 0 auto; /* center the pill */
+	}
     .brand{ font-weight:700; letter-spacing:.3px; }
     .brand small{ font-weight:500; color:var(--muted) }
 
@@ -225,6 +233,7 @@
     .btn--farm  { background: var(--accent-farm); }
     .btn--he    { background: var(--accent-he); }
     .btn--hyper { background: var(--accent-hyper); }
+	.btn--kriah { background: var(--accent-kriah); }
 
     .desc{ color: var(--ink-soft); margin-top:.25rem; }
 
@@ -324,7 +333,7 @@
 
         <article class="card">
           <h3>Hyper Shapes</h3>
-          <p class="desc">A gently morphing hyper-object demo—rotate, project, and wander through dimensions.</p>
+          <p class="desc">Gently morphing hyper-objects.</p>
           <a class="btn btn--hyper" target="_blank" rel="noopener"
              aria-label="Open Hyper Shapes playground in a new tab"
              href="https://hyper-shapes.onrender.com/hyper.html">Open Hyper Shapes</a>
@@ -332,7 +341,7 @@
 		<article class="card">
 		  <h3>Kriah Class</h3>
 		  <p class="desc">A gentle structured reading journey - step-by-step fluency practice.</p>
-		  <a class="btn btn--he" target="_blank" rel="noopener"
+		  <a class="btn btn--kriah" target="_blank" rel="noopener"
 			 aria-label="Open Kriah Class in a new tab"
 			 href="https://kriah-class.onrender.com/kriah_class.html">Open Kriah Class</a>
 		  <p class="sub" aria-hidden="true" style="margin:.4rem 0 0; font-size:.9rem;">Hebrew Reading Course</p>
