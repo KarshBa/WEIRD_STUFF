@@ -40,6 +40,8 @@
       --lav:#E6E4FA;
       --mint:#DDF4ED;
       --butter:#FFF3C7;
+	  --peach: #D35537
+	  --ivory: #FFFFE3 
       --card: #fffdf8;
       --radius: 26px;
       --shadow-lg: 0 18px 55px rgba(0,0,0,.10), 0 3px 12px rgba(0,0,0,.08);
@@ -48,6 +50,7 @@
       --accent-life: var(--lav);
       --accent-farm: var(--mint);
       --accent-he:   var(--butter);
+	  --accent-zman: var(--ivory);
       --accent-hyper: color-mix(in oklab, var(--lav) 50%, var(--mint) 50%);
       --accent-kriah: #CC8899;
       --ease: cubic-bezier(.19,.7,.22,1);
@@ -73,6 +76,7 @@
       --accent-life:#4b4971;
       --accent-farm:#3e5b52;
       --accent-he:#6a5a34;
+	  --accent-zman:##FFFFE3;
       --accent-hyper:#3f5461;
       --accent-kriah: #A94064;
     }
@@ -163,6 +167,7 @@
     .btn--he{background:var(--accent-he);}
     .btn--hyper{background:var(--accent-hyper);}
     .btn--kriah{background:var(--accent-kriah);}
+	.btn--zman{background:var(--accent-zman);}
     .desc{color:var(--ink-soft);margin-top:.25rem;}
     footer{text-align:center;color:var(--muted);font-size:.95rem;margin:28px auto 16px;}
 
@@ -195,10 +200,25 @@
 
     <main id="projects">
       <section class="grid" aria-label="Project list">
-        <article class="card">
+        
+		<article class="card">
+          <h3>Kriah Class</h3>
+          <p class="desc">Step-by-step fluency practice.</p>
+          <a class="btn btn--kriah" target="_blank" rel="noopener" href="https://kriah-class.onrender.com/kriah_class.html">Open Kriah Class</a>
+          <p class="sub" aria-hidden="true" style="margin:.4rem 0 0;font-size:.9rem;">Hebrew Reading Course</p>
+        </article>
+		
+		<article class="card">
+          <h3>Sha'ot Zmaniot</h3>
+          <p class="desc">Halachic clock and times.</p>
+          <a class="btn btn--kriah" target="_blank" rel="noopener" href="https://zmanim-clock.onrender.com">Open Sha'ot Zmaniot</a>
+          <p class="sub" aria-hidden="true" style="margin:.4rem 0 0;font-size:.9rem;">Halacha</p>
+        </article>
+		
+		<article class="card">
           <h3>Game of Life</h3>
           <p class="desc">Conway’s classic zero-player game - simple rules blossom into complex behavior.</p>
-          <a class="btn btn--life" target="_blank" rel="noopener" href="https://karshba.github.io/GAME_OF_LIFE/">Open Game of Life</a>
+          <a class="btn btn--farm" target="_blank" rel="noopener" href="https://karshba.github.io/GAME_OF_LIFE/">Open Game of Life</a>
         </article>
 
         <article class="card">
@@ -210,7 +230,7 @@
         <article class="card">
           <h3>Srigah Otiyot</h3>
           <p class="desc">Explore Obscure Letter Connections.</p>
-          <a class="btn btn--he" target="_blank" rel="noopener" href="https://srigah-otiyot.onrender.com/srigah_otiyot.html">Open Srigah Otiyot</a>
+          <a class="btn btn--kriah" target="_blank" rel="noopener" href="https://srigah-otiyot.onrender.com/srigah_otiyot.html">Open Srigah Otiyot</a>
           <p class="sub" aria-hidden="true" style="margin:.4rem 0 0;font-size:.9rem;">Hebrew</p>
         </article>
 
@@ -218,13 +238,6 @@
           <h3>Hyper Shapes</h3>
           <p class="desc">Gently morphing hyper-objects.</p>
           <a class="btn btn--hyper" target="_blank" rel="noopener" href="https://hyper-shapes.onrender.com/hyper.html">Open Hyper Shapes</a>
-        </article>
-
-        <article class="card">
-          <h3>Kriah Class</h3>
-          <p class="desc">Step-by-step fluency practice.</p>
-          <a class="btn btn--kriah" target="_blank" rel="noopener" href="https://kriah-class.onrender.com/kriah_class.html">Open Kriah Class</a>
-          <p class="sub" aria-hidden="true" style="margin:.4rem 0 0;font-size:.9rem;">Hebrew Reading Course</p>
         </article>
 
         <article class="card">
@@ -305,7 +318,6 @@
   </script>
 </body>
 </html>
-
 
 
 
